@@ -16,13 +16,6 @@ const Home = () => {
     const [quantities, setQuantities] = useState({});
     const [totalAmount, setTotalAmount] = useState(0);
 
-    useEffect(() => {
-        if (isFocused) {
-            setQuantities({});
-            setTotalAmount(0);
-        }
-    }, [isFocused]);
-
     const handleAdd = (itemName, price) => {
         const newQuantities = { ...quantities };
         newQuantities[itemName] = (newQuantities[itemName] || 0) + 1;
@@ -39,7 +32,9 @@ const Home = () => {
         }
     };
 
-    const hasSelectedItems = Object.values(quantities).some(quantity => quantity > 0);
+    const hasSelectedItems = Object.values(quantities).some(
+        (quantity) => quantity > 0
+    );
 
     return (
         <View style={{ flex: 1 }}>
@@ -96,6 +91,5 @@ const Home = () => {
         </View>
     );
 };
-
 
 export default Home;

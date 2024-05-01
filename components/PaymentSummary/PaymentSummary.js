@@ -6,6 +6,7 @@ import Header from "../Parts/Header";
 const PaymentSummaryScreen = ({ route, navigation }) => {
     const { selectedItems, totalAmount } = route.params;
 
+
     const handlePay = () => {
         //Navigate to the OrderPlaceScreen
         navigation.navigate("OrderPlaced");
@@ -29,7 +30,7 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        // padding: 20,
     },
     header: {
         fontSize: 20,

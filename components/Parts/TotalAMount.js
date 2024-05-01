@@ -9,3 +9,5 @@ const TotalAmount = ({ totalAmount }) => (
 );
 
 export default TotalAmount;
+
+
