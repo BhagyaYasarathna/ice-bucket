@@ -1,20 +1,29 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./components/Home/Home";
+import PaymentSummaryScreen from "./components/PaymentSummary/PaymentSummary";
+import OrderPlacedScreen from "./components/OrderPlaced/OrderPlaced";
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
     return (
-        <SafeAreaView style={styles.container}>
-            <Home />
-        </SafeAreaView>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Ice Bucket" component={Home} />
+                <Stack.Screen
+                    name="PaymentSummary"
+                    component={PaymentSummaryScreen}
+                    options={{ title: "" }}
+                />
+                <Stack.Screen
+                    name="OrderPlaced"
+                    component={OrderPlacedScreen}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
-}
+};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
+export default App;
