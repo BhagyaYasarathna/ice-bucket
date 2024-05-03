@@ -1,34 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./FirebaseConfig";
+import Login from "./components/Authentication/Login";
+import Register from "./components/Authentication/Register";
 import Home from "./components/Home/Home";
 import PaymentSummaryScreen from "./components/PaymentSummary/PaymentSummary";
 import OrderPlacedScreen from "./components/OrderPlaced/OrderPlaced";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
-const App = () => {
+const InsideStack = createNativeStackNavigator();
+
+function InsideLayout() {
+    return (
+        <InsideStack.Navigator>
+            <InsideStack.Screen
+                name="Home"
+                component={Home}
+                options={{ headerShown: false }}
+            />
+            <InsideStack.Screen
+                name="PaymentSummary"
+                component={PaymentSummaryScreen}
+                options={{ headerShown: false }}
+            />
+            <InsideStack.Screen
+                name="OrderPlaced"
+                component={OrderPlacedScreen}
+                options={{ headerShown: false }}
+            />
+        </InsideStack.Navigator>
+    );
+}
+
+export default function App() {
+    // const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        onAuthStateChanged(FIREBASE_AUTH, (user) => {
+            console.log("user", user);
+            setUser(user);
+        });
+    }, []);
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen
-                    name="Home"
-                    component={Home}
-                    options={{ headerLeft: null, headerShown: false }}
-                />
-                <Stack.Screen
-                    name="PaymentSummary"
-                    component={PaymentSummaryScreen}
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name="OrderPlaced"
-                    component={OrderPlacedScreen}
-                    options={{ headerLeft: null, headerShown: false }}
-                />
+                {user ? (
+                    <Stack.Screen
+                        name="Inside"
+                        component={InsideLayout}
+                        options={{ headerShown: false }}
+                    />
+                ) : (
+                    <>
+                        <Stack.Screen
+                            name="Login"
+                            component={Login}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Register"
+                            component={Register}
+                            options={{ headerShown: false }}
+                        />
+                    </>
+                )}
             </Stack.Navigator>
         </NavigationContainer>
     );
-};
-
-export default App;
+}

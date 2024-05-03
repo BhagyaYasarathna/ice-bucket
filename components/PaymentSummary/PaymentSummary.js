@@ -1,19 +1,20 @@
-// PaymentSummaryScreen.js
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import Header from "../Parts/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const PaymentSummaryScreen = ({ route, navigation }) => {
-    const { selectedItems, totalAmount } = route.params;
-
+    const { selectedItems, totalAmount, setQuantities, setTotalAmount } =
+        route.params;
 
     const handlePay = () => {
-        //Navigate to the OrderPlaceScreen
+        setQuantities({});
+        setTotalAmount(0);
         navigation.navigate("OrderPlaced");
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Header title={"Ice-Bucket"} />
             <Text style={styles.header}>Selected Items</Text>
             {Object.keys(selectedItems).map((itemName, index) => (
@@ -24,13 +25,13 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
             <View style={{ marginVertical: 20 }}>
                 <Button title="Pay" onPress={handlePay} />
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        // padding: 20,
+        flex: 1,
     },
     header: {
         fontSize: 20,

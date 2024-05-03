@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Button, FlatList, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Button, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MenuData } from "../Parts/MenuData";
@@ -7,6 +7,7 @@ import Header from "../Parts/Header";
 import SectionHeader from "../Parts/SectionHeader";
 import FoodItem from "../Parts/FoodItem";
 import TotalAmount from "../Parts/TotalAMount";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Stack = createStackNavigator();
 
@@ -37,7 +38,7 @@ const Home = () => {
     );
 
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             <Header title={"Ice-Bucket"} />
             <ScrollView>
                 <View>
@@ -84,12 +85,21 @@ const Home = () => {
                         navigation.navigate("PaymentSummary", {
                             selectedItems: Object.entries(quantities),
                             totalAmount: totalAmount,
+                            quantities: quantities,
+                            setQuantities: setQuantities,
+                            setTotalAmount: setTotalAmount,
                         })
                     }
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
 
 export default Home;
