@@ -7,6 +7,7 @@ import {
     Button,
     KeyboardAvoidingView,
     TouchableOpacity,
+    Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
@@ -15,10 +16,15 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 export default function Register({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
 
     const signUp = async () => {
+        if (password !== confirmPassword) {
+            Alert.alert("Error", "Passwords do not match");
+            return;
+        }
         setLoading(true);
         try {
             const response = await createUserWithEmailAndPassword(
@@ -55,6 +61,14 @@ export default function Register({ navigation }) {
                     autoCapitalize="none"
                     onChangeText={(text) => setPassword(text)}
                 ></TextInput>
+                <TextInput
+                    secureTextEntry={true}
+                    value={confirmPassword}
+                    style={styles.input}
+                    placeholder="Confirm Password"
+                    autoCapitalize="none"
+                    onChangeText={(text) => setConfirmPassword(text)}
+                />
                 {loading ? (
                     <ActivityIndicator size="large" color="#0000ff" />
                 ) : (
