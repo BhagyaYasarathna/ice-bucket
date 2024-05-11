@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { FIREBASE_AUTH } from "../../FireBaseConfig";
+// import { FIREBASE_AUTH } from "../../FireBaseConfig";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login({ navigation }) {

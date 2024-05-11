@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { FIREBASE_AUTH } from "../../FireBaseConfig";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Register({ navigation }) {
@@ -27,7 +27,8 @@ export default function Register({ navigation }) {
                 password
             );
             console.log(response);
-            alert("Check your emails!");
+            navigation.navigate("UserDetails");
+            alert("Account Creation Successful!");
         } catch (error) {
             console.log(error);
             alert("Sign up failed: " + error.message);
