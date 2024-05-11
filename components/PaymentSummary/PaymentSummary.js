@@ -102,13 +102,13 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
         const user = auth.currentUser;
 
         if (user) {
-            const curremtTime = new Date().toLocaleTimeString([], {
+            const currentTime = new Date().toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",
             });
             const currentDate = new Date().toISOString().slice(0, 10);
-            // Combine user details and selected items
+
             const orderDetails = {
                 userDetails: userDetails,
                 items: selectedItems,
@@ -117,7 +117,7 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
 
             // Write order details to the 'orders' database
             set(
-                ref(db, `${currentDate}/${user.uid}/${curremtTime}`),
+                ref(db, `${currentDate}/${user.uid}/${currentTime}`),
                 orderDetails
             )
                 .then(() => {
