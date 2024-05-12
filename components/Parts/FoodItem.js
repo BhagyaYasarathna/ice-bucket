@@ -1,12 +1,13 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 const FoodItem = ({ item, onAdd, onRemove, selectedQuantity }) => {
     return (
         <View style={styles.container}>
+            <Image source={item.image} style={styles.image} />
             <View style={styles.itemContainer}>
                 <Text>{item.name}</Text>
-                <Text>${item.price}</Text>
+                <Text>Rs. {item.price} /=</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={onAdd} style={styles.plusButton}>
@@ -60,6 +61,13 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderRadius: 5,
         padding: 5,
+    },
+    image: {
+        width: 80,
+        height: 80,
+        borderRadius: 5,
+        marginRight: 10,
+        borderRadius: 25,
     },
 });
 

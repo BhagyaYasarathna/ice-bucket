@@ -144,7 +144,7 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
                 >{`${selectedItems[itemName]}`}</Text>
             ))}
             <Text style={styles.header}>Total Amount</Text>
-            <Text style={styles.content}>$ {totalAmount}</Text>
+            <Text style={styles.content}>Rs. {totalAmount} /=</Text>
             <View style={{ marginVertical: 20 }}>
                 <TouchableOpacity style={styles.button} onPress={handlePay}>
                     <Text style={styles.buttonText}>Pay</Text>
