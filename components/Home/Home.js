@@ -7,9 +7,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     Text,
+    Modal,
+    Linking,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MenuData } from "../Parts/MenuData";
 import Header from "../Parts/Header";
@@ -29,9 +30,9 @@ const Drawer = createDrawerNavigator();
 
 const Home = () => {
     const navigation = useNavigation();
-    const isFocused = useIsFocused();
     const [quantities, setQuantities] = useState({});
     const [totalAmount, setTotalAmount] = useState(0);
+    const [showContactInfo, setShowContactInfo] = useState(false);
 
     const handleAdd = (itemName, price) => {
         const newQuantities = { ...quantities };
@@ -63,6 +64,12 @@ const Home = () => {
                         onPress={() => navigation.navigate("UserDetails")}
                     />
                     <DrawerItem
+                        label="Contact Info"
+                        onPress={() => {
+                            setShowContactInfo(true);
+                        }}
+                    />
+                    <DrawerItem
                         label="Logout"
                         onPress={() => FIREBASE_AUTH.signOut()}
                     />
@@ -71,92 +78,122 @@ const Home = () => {
         >
             <Drawer.Screen name="Ice Bucket">
                 {() => (
-                    <HomeContent
-                        totalAmount={totalAmount}
-                        hasSelectedItems={hasSelectedItems}
-                        quantities={quantities}
-                        handleAdd={handleAdd}
-                        handleRemove={handleRemove}
-                        setQuantities={setQuantities}
-                        setTotalAmount={setTotalAmount}
-                    />
+                    <SafeAreaView style={styles.container}>
+                        <Header title={"Ice-Bucket"} />
+                        <ScrollView>
+                            <View>
+                                <FlatList
+                                    data={Object.keys(MenuData)}
+                                    renderItem={({ item }) => (
+                                        <View>
+                                            <SectionHeader title={item} />
+                                            <FlatList
+                                                data={MenuData[item]}
+                                                renderItem={({
+                                                    item: menuItem,
+                                                }) => (
+                                                    <FoodItem
+                                                        item={menuItem}
+                                                        selectedQuantity={
+                                                            quantities[
+                                                                menuItem.name
+                                                            ] || 0
+                                                        } // Display 0 if not selected
+                                                        onAdd={() =>
+                                                            handleAdd(
+                                                                menuItem.name,
+                                                                menuItem.price
+                                                            )
+                                                        }
+                                                        onRemove={() =>
+                                                            handleRemove(
+                                                                menuItem.name,
+                                                                menuItem.price
+                                                            )
+                                                        }
+                                                    />
+                                                )}
+                                                keyExtractor={(menuItem) =>
+                                                    menuItem.id
+                                                }
+                                            />
+                                        </View>
+                                    )}
+                                    keyExtractor={(item) => item}
+                                />
+                            </View>
+                        </ScrollView>
+                        <View style={styles.totalAmountContainer}>
+                            <TotalAmount totalAmount={totalAmount} />
+                        </View>
+                        {hasSelectedItems && (
+                            <TouchableOpacity
+                                style={styles.button}
+                                onPress={() =>
+                                    navigation.navigate("PaymentSummary", {
+                                        selectedItems:
+                                            Object.entries(quantities),
+                                        totalAmount: totalAmount,
+                                        quantities: quantities,
+                                        setQuantities: setQuantities,
+                                        setTotalAmount: setTotalAmount,
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>
+                                    Proceed to Pay
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        <Modal
+                            visible={showContactInfo}
+                            animationType="slide"
+                            transparent={true}
+                            onRequestClose={() => setShowContactInfo(false)}
+                        >
+                            <View style={styles.modalContainer}>
+                                <Text style={styles.detailsText}>
+                                    Shop Owner: Bhagya Yasarathna
+                                </Text>
+                                <Text style={styles.detailsText}>
+                                    Address: No. 177/3, Kopiwatta Road,
+                                    Yagodamulla, Kotugoda
+                                </Text>
+                                <Text
+                                    onPress={() =>
+                                        Linking.openURL("tel:0775230841")
+                                    }
+                                    style={styles.click}
+                                >
+                                    Phone Number: 0775230841
+                                </Text>
+                                <Text
+                                    onPress={() =>
+                                        Linking.openURL(
+                                            "mailto:bhagyayasarathna@gmail.com"
+                                        )
+                                    }
+                                    style={styles.click}
+                                >
+                                    Email Address: bhagyayasarathna@gmail.com
+                                </Text>
+
+                                <Text style={styles.detailsText}>
+                                    Facebook: Bhagya Yasarathna
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => setShowContactInfo(false)}
+                                >
+                                    <Text style={styles.closeButton}>
+                                        Close
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
+                    </SafeAreaView>
                 )}
             </Drawer.Screen>
         </Drawer.Navigator>
-    );
-};
-
-const HomeContent = ({
-    totalAmount,
-    hasSelectedItems,
-    quantities,
-    handleAdd,
-    handleRemove,
-    setQuantities,
-    setTotalAmount,
-}) => {
-    const navigation = useNavigation();
-
-    return (
-        <SafeAreaView style={styles.container}>
-            <Header title={"Ice-Bucket"} />
-            <ScrollView>
-                <View>
-                    <FlatList
-                        data={Object.keys(MenuData)}
-                        renderItem={({ item }) => (
-                            <View>
-                                <SectionHeader title={item} />
-                                <FlatList
-                                    data={MenuData[item]}
-                                    renderItem={({ item: menuItem }) => (
-                                        <FoodItem
-                                            item={menuItem}
-                                            selectedQuantity={
-                                                quantities[menuItem.name] || 0
-                                            } // Display 0 if not selected
-                                            onAdd={() =>
-                                                handleAdd(
-                                                    menuItem.name,
-                                                    menuItem.price
-                                                )
-                                            }
-                                            onRemove={() =>
-                                                handleRemove(
-                                                    menuItem.name,
-                                                    menuItem.price
-                                                )
-                                            }
-                                        />
-                                    )}
-                                    keyExtractor={(menuItem) => menuItem.id}
-                                />
-                            </View>
-                        )}
-                        keyExtractor={(item) => item}
-                    />
-                    <View style={styles.totalAmountContainer}>
-                        <TotalAmount totalAmount={totalAmount} />
-                    </View>
-                </View>
-            </ScrollView>
-            {hasSelectedItems && (
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() =>
-                        navigation.navigate("PaymentSummary", {
-                            selectedItems: Object.entries(quantities),
-                            totalAmount: totalAmount,
-                            quantities: quantities,
-                            setQuantities: setQuantities,
-                            setTotalAmount: setTotalAmount,
-                        })
-                    }
-                >
-                    <Text style={styles.buttonText}>Proceed to Pay</Text>
-                </TouchableOpacity>
-            )}
-        </SafeAreaView>
     );
 };
 
@@ -177,12 +214,46 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
+        marginTop: 0.1,
     },
     buttonText: {
         color: "#fff",
         fontSize: 20,
         fontWeight: "bold",
+    },
+    detailsText: {
+        color: "black",
+        fontSize: 20,
+        fontWeight: "bold",
+        padding: 15,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "white",
+    },
+    closeButton: {
+        backgroundColor: "blue",
+        padding: 20,
+        borderRadius: 25,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 35,
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    click: {
+        color: "blue",
+        fontSize: 20,
+        fontWeight: "bold",
+        padding: 15,
     },
 });
 
