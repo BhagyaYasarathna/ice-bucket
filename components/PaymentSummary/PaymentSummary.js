@@ -67,7 +67,7 @@
 // export default PaymentSummaryScreen;
 
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import Header from "../Parts/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAuth } from "firebase/auth";
@@ -138,20 +138,17 @@ const PaymentSummaryScreen = ({ route, navigation }) => {
             <Header title={"Ice-Bucket"} />
             <Text style={styles.header}>Selected Items</Text>
             {Object.keys(selectedItems).map((itemName, index) => (
-                <Text key={index}>{`${selectedItems[itemName]}`}</Text>
+                <Text
+                    style={styles.content}
+                    key={index}
+                >{`${selectedItems[itemName]}`}</Text>
             ))}
             <Text style={styles.header}>Total Amount</Text>
-            <Text>$ {totalAmount}</Text>
-            {/* {userDetails && (
-                <View>
-                    <Text style={styles.header}>User Details</Text>
-                    <Text>Name: {userDetails.name}</Text>
-                    <Text>Address: {userDetails.address}</Text>
-                    <Text>Phone Number: {userDetails.phoneNumber}</Text>
-                </View>
-            )} */}
+            <Text style={styles.content}>$ {totalAmount}</Text>
             <View style={{ marginVertical: 20 }}>
-                <Button title="Pay" onPress={handlePay} />
+                <TouchableOpacity style={styles.button} onPress={handlePay}>
+                    <Text style={styles.buttonText}>Pay</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -168,6 +165,23 @@ const styles = StyleSheet.create({
         padding: 5,
         marginTop: 10,
         marginBottom: 5,
+    },
+    button: {
+        backgroundColor: "#0080ff",
+        height: 50,
+        borderRadius: 5,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    content: {
+        fontSize: 18,
+        padding: 5,
     },
 });
 

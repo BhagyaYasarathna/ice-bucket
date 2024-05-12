@@ -1,13 +1,19 @@
 // TotalAmount.js
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 const TotalAmount = ({ totalAmount }) => (
     <View>
-        <Text>Total Amount: {totalAmount}</Text>
+        <Text style={styles.totalAmountText}>Total Amount: {totalAmount}</Text>
     </View>
 );
 
 export default TotalAmount;
 
-
+const styles = StyleSheet.create({
+    totalAmountText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+});

@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, Button, StyleSheet, BackHandler } from "react-native";
+import {
+    View,
+    Text,
+    Button,
+    StyleSheet,
+    BackHandler,
+    TouchableOpacity,
+} from "react-native";
 import Header from "../Parts/Header";
 import { Center } from "native-base";
 import { useNavigation } from "@react-navigation/native";
@@ -31,8 +38,15 @@ const OrderPlacedScreen = ({ navigation }) => {
             <Header title={"Ice Bucket"} />
             <Text style={styles.details}>Your order is placed. Thank you!</Text>
             <View style={styles.bar}>
-                <Button title="Go Back to Home" onPress={handleGoBack} />
-                <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+                <TouchableOpacity style={styles.button} onPress={handleGoBack}>
+                    <Text style={styles.buttonText}>Go Back to Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => FIREBASE_AUTH.signOut()}
+                >
+                    <Text style={styles.buttonText}>Logout</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -45,13 +59,29 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     details: {
-        fontSize: 20,
+        fontSize: 25,
         marginTop: 100,
         marginBottom: 100,
         textAlign: "center",
+        fontWeight: "bold",
+        color: "red",
     },
     bar: {
         marginVertical: 20,
         alignItems: "center",
+    },
+    button: {
+        backgroundColor: "#0080ff",
+        width: "50%",
+        height: 50,
+        borderRadius: 25,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });

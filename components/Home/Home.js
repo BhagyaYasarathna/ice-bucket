@@ -1,15 +1,31 @@
 import React, { useState } from "react";
-import { View, Button, FlatList, ScrollView, StyleSheet } from "react-native";
+import {
+    View,
+    Button,
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    Text,
+} from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { MenuData } from "../Parts/MenuData";
 import Header from "../Parts/Header";
 import SectionHeader from "../Parts/SectionHeader";
 import FoodItem from "../Parts/FoodItem";
 import TotalAmount from "../Parts/TotalAMount";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-const Stack = createStackNavigator();
+import {
+    createDrawerNavigator,
+    DrawerContentScrollView,
+    DrawerItemList,
+    DrawerItem,
+} from "@react-navigation/drawer";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
+
+const Drawer = createDrawerNavigator();
 
 const Home = () => {
     const navigation = useNavigation();
@@ -36,6 +52,50 @@ const Home = () => {
     const hasSelectedItems = Object.values(quantities).some(
         (quantity) => quantity > 0
     );
+
+    return (
+        <Drawer.Navigator
+            drawerContent={(props) => (
+                <DrawerContentScrollView {...props}>
+                    <DrawerItemList {...props} />
+                    <DrawerItem
+                        label="Edit Profile"
+                        onPress={() => navigation.navigate("UserDetails")}
+                    />
+                    <DrawerItem
+                        label="Logout"
+                        onPress={() => FIREBASE_AUTH.signOut()}
+                    />
+                </DrawerContentScrollView>
+            )}
+        >
+            <Drawer.Screen name="Ice Bucket">
+                {() => (
+                    <HomeContent
+                        totalAmount={totalAmount}
+                        hasSelectedItems={hasSelectedItems}
+                        quantities={quantities}
+                        handleAdd={handleAdd}
+                        handleRemove={handleRemove}
+                        setQuantities={setQuantities}
+                        setTotalAmount={setTotalAmount}
+                    />
+                )}
+            </Drawer.Screen>
+        </Drawer.Navigator>
+    );
+};
+
+const HomeContent = ({
+    totalAmount,
+    hasSelectedItems,
+    quantities,
+    handleAdd,
+    handleRemove,
+    setQuantities,
+    setTotalAmount,
+}) => {
+    const navigation = useNavigation();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -75,12 +135,14 @@ const Home = () => {
                         )}
                         keyExtractor={(item) => item}
                     />
-                    <TotalAmount totalAmount={totalAmount} />
+                    <View style={styles.totalAmountContainer}>
+                        <TotalAmount totalAmount={totalAmount} />
+                    </View>
                 </View>
             </ScrollView>
             {hasSelectedItems && (
-                <Button
-                    title="Proceed to Pay"
+                <TouchableOpacity
+                    style={styles.button}
                     onPress={() =>
                         navigation.navigate("PaymentSummary", {
                             selectedItems: Object.entries(quantities),
@@ -90,7 +152,9 @@ const Home = () => {
                             setTotalAmount: setTotalAmount,
                         })
                     }
-                />
+                >
+                    <Text style={styles.buttonText}>Proceed to Pay</Text>
+                </TouchableOpacity>
             )}
         </SafeAreaView>
     );
@@ -99,6 +163,26 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    totalAmountContainer: {
+        backgroundColor: "pink",
+        padding: 10,
+        marginVertical: 10,
+        borderRadius: 5,
+    },
+    button: {
+        backgroundColor: "#0080ff",
+        width: "100%",
+        height: 50,
+        borderRadius: 5,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "bold",
     },
 });
 

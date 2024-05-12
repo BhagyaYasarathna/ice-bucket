@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 const Header = ({ logo }) => {
     return (
         <View style={styles.header}>
-            <Image source={logo} style={styles.logo} />
+            {/* <Image source={logo} style={styles.logo} /> */}
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>Ice Bucket</Text>
             </View>
